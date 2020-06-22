@@ -1,0 +1,42 @@
+﻿@model ClothShop.ViewModels.CheckoutViewModel
+@{
+    ViewBag.Title = "Checkout";
+    Layout = "~/Views/Shared/_AdminLayout .cshtml";
+
+    decimal totalBill = 0;
+}
+
+<h2>Checkout</h2>
+
+@if (Model != null)
+{
+    if (Model.CartProducts != null && Model.CartProductIDs != null)
+    {
+        <div>
+            @foreach (var product in Model.CartProducts)
+            {
+                var productQuantity = Model.CartProductIDs.Where(id => id == product.ProductID).Count();
+
+                totalBill = totalBill + (productQuantity * product.ProductPrice);
+                <div>
+                    Name : @product.ProductName ==> Price = @product.ProductPrice ==> Qauntity = @productQuantity
+                    over All Price = @(productQuantity * product.ProductPrice)
+                </div>
+
+
+            }
+
+            <div style="background-color:forestgreen;color:orangered;">
+                Total Bill : @Model.CartProducts.Sum(p => p.ProductPrice * Model.CartProductIDs.Where(id => id == p.ProductID).Count());<br />
+                Total Bill : @totalBill;
+            </div>
+        </div>
+    }
+    else
+    {
+        <div>
+            No Products in cart 
+        </div>
+    }
+}
+

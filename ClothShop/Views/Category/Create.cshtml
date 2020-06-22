@@ -1,0 +1,242 @@
+﻿@*@model ClothShop.Models.Category*@
+@{
+    ViewBag.Title = "Create";
+    Layout = "";
+    var defaultimg = "/Content/images/placeholder.jpg";
+}
+
+<h2>Create</h2>
+
+@*<form id="createCategory">*@
+
+@*<label>Category Name</label>
+    <input type="text" name="CategoryName" /><br />
+
+    <label>Category Description</label>
+    <input type="text" name="CategoryDescription" /><br />
+    <input type="hidden" id="ImageURL" name="ImageURL" /><br />
+
+    <label>Category Image</label>
+    <input type="file" name="" id="imageUpload" /><br />
+    <img src="" id="CategoryImg" alt="" class="thumbnail" style="width:200px;height:200px;" />
+
+    <label>Is Featured</label>
+    <input type="radio" name="IsFeatured" value="True" />True
+    <input type="radio" name="IsFeatured" value="False" />False
+
+    <button type="submit" id="savebtn">Save</button>*@
+@*</form>*@
+
+<div class="row">
+    <div class="col-md-8">
+        <form id="createCategory">
+
+            <div class="form-group">
+
+                <label>Category Name</label>
+                <input type="text" name="CategoryName" style="font-size:" class="form-control" />
+                
+            </div>
+
+            <div class="form-group">
+                <label>Category Description</label>
+                <input type="text" name="CategoryDescription" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Image</label>
+                <input type="hidden" id="ImageURL" name="ImageURL" />
+                <input class="form-control" id="imageUpload" name="Image" type="file" />
+            </div>
+
+            <div class="form-group">
+
+                <label>Is Featured?</label>
+                <div class="input-group">
+                    <div class="radio form-control">
+                        <label><input name="IsFeatured" type="radio" value="True" /> True</label>
+                    </div>
+                    <div class="radio form-control">
+                        <label><input name="IsFeatured" type="radio" value="False" /> False</label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group pl-5">
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <button type="button" class="form-control" id="savebtn">Save</button>
+                    </div>
+                    <div class="col-md-5">
+                        <button type="button" class="form-control" id="cancelbtn">canel</button>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+            </div>
+
+
+        </form>
+    </div>
+    <div class="col-md-4">
+        <img src="@defaultimg" class="img-thumbnail img-fluid" id="categoryImage" />
+    </div>
+</div>
+
+<script>
+
+
+        //$("#savebtn").click(function () {
+        //    var CategoryImg = document.getElementById('imageUpload').files[0];
+        //    var CategoryName = $('#CategoryName').val();
+        //    var CategoryDescription = $('#CategoryDescription').val();
+
+        //    var fd = new FormData();
+        //    fd.append("CategoryName", CategoryName);
+        //    fd.append("CategoryDescription", CategoryDescription);
+        //    fd.append("CategoryImg", CategoryImg);
+        //    $.ajax({
+
+        //        url: "/Category/Create",
+        //        type: "POST",
+        //        dataType: "json",
+        //        contentType: false,
+        //        processData: false,
+        //        data: fd,
+        //        success: function (result) {
+        //            alert(result.msg)
+
+        //        },
+        //        error: function (errormessage) {
+        //            alert(result.msg)
+        //        }
+        //    });
+
+        //})
+
+
+
+        $("#imageUpload").change(function () {
+		var element = this;
+
+		var formData = new FormData();
+
+		var totalFiles = element.files.length;
+
+		for (var i = 0; i < totalFiles; i++) {
+			var file = element.files[i];
+			formData.append("Photo", file);
+		}
+
+		$.ajax({
+			type: 'POST',
+			url: '@Url.Action("UploadImage", "Shared")',
+			dataType: 'json',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+        .done(function (response) {
+
+        	if(response.Success)
+        	{
+                $("#ImageURL").val(response.ImageURL);
+                $("#categoryImage").attr("src", response.ImageURL);
+        	}
+        })
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+        	alert("FAIL");
+        });
+	});
+
+    $('#createCategory').validate({
+       
+        rules: {
+            CategoryName: {
+                required: true,
+                minlength: 3,
+                maxlength: 50,
+            },
+            CategoryDescription: {
+                maxlength: 500
+            }
+
+        },
+        messages: {
+            CategoryName: {
+                required: 'Name is required',
+                minlength: 'Minimum Length is 5',
+                maxlength: 'Maximum Length is 50'
+            },
+            CategoryDescription: {
+                maxlength: 'Maximum Length is 500'
+            }
+        },
+        errorPlacement: function (error, element) {
+            error.css({ 'padding-left': '10px', 'margin-right': '20px', 'padding-bottom': '2px' , 'font-size':'small' ,'color':'red' });
+            error.insertAfter(element);
+        }
+    });
+
+
+        $("#savebtn").click(function () {
+
+            if ($('#createCategory').valid()) {
+
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Create", "Category")',
+                    data: $("#createCategory").serialize(),
+                    success: function (response) {
+                        $("#TableContainer").html(response)
+                        $("#actionContainer").html("")
+                    },
+                    error: function () {
+
+                    }
+                });
+
+            }
+            else {
+                Swal.fire({
+                    title: "Warning",
+                    text: "Please enter all valid data in fields.",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                });
+            }
+                //}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                 //    alert("FAIL");
+               //});
+                //.done(function (response) {
+                //    //$("#tableContiner").html(response);
+                //    //$("#actionContainer").html("");
+                //    //focusAction("tableContiner");
+                //})
+                //.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                //    //swal({
+                //    //    title: "Warning",
+                //    //    text: "Please enter all required fields.",
+                //    //    icon: "warning",
+                //    //    buttons: true,
+                //    //    dangerMode: true,
+                //    //});
+                //});
+         });
+
+        $("#cancelbtn").click(function () {
+            $("#actionContainer").html("");
+            focusAction("TableContainer");
+        })
+
+
+
+</script>

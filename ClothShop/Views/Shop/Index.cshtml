@@ -1,0 +1,154 @@
+﻿@using ClothShop.Code
+@model ClothShop.ViewModels.ShopViewModel
+@{
+    ViewBag.Title = "Index";
+}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+<!-- Page title -->
+<div class="page-title parallax parallax1">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-title-heading">
+                    <h1 class="title">Shop</h1>
+                </div><!-- /.page-title-heading -->
+                <!-- /.breadcrumbs -->
+            </div><!-- /.col-md-12 -->
+        </div><!-- /.row -->
+    </div><!-- /.container -->
+</div><!-- /.page-title -->
+
+<section class="flat-row main-shop shop-slidebar">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="sidebar slidebar-shop">
+                    <div class="widget widget-search">
+                        <form role="search" method="get" class="search-form" action="@Url.Action("Index","Shop")">
+                            <label>
+                                <input type="search" class="search-field" placeholder="Search …" value="@Model.SearchTerm" name="searchTerm">
+                            </label>
+                            <input type="submit" class="search-submit" value="Search">
+                        </form>
+                    </div><!-- /.widget-search -->
+                    <div class="widget widget-sort-by">
+                        <h5 class="widget-title">
+                            Sort By
+                        </h5>
+                        <ul>
+                            <li><a data-href="@Url.Action("FilterProducts","Shop",new { sortBy = (int)SortByEnum.Default})"  class="dataLink @(Model.SortBy.HasValue ? Model.SortBy.Value==(int)SortByEnum.Default?"active":string.Empty : string.Empty)">Default</a></li>
+                            <li><a data-href="@Url.Action("FilterProducts","Shop",new { sortBy = (int)SortByEnum.Popularity})" class="dataLink @(Model.SortBy.HasValue ? Model.SortBy.Value==(int)SortByEnum.Popularity?"active":string.Empty : string.Empty)">Popularity</a></li>
+                            <li><a data-href="@Url.Action("FilterProducts","Shop",new { sortBy = (int)SortByEnum.PriceLowToHigh})"  class="dataLink @(Model.SortBy.HasValue ? Model.SortBy.Value==(int)SortByEnum.PriceLowToHigh?"active":string.Empty : string.Empty)">Price: low to high</a></li>
+                            <li><a data-href="@Url.Action("FilterProducts","Shop",new { sortBy = (int)SortByEnum.PriceHighToLow})"  class="dataLink @(Model.SortBy.HasValue ? Model.SortBy.Value==(int)SortByEnum.PriceHighToLow?"active":string.Empty : string.Empty)">Price: high to low</a></li>
+                        </ul>
+                    </div><!-- /.widget-sort-by -->
+
+
+                    <div class="widget widget_tag">
+                        <h5 class="widget-title">
+                            Categories
+                        </h5>
+                        <div class="tag-list">
+                            <a style="display:block;" data-href="@Url.Action("FilterProducts", "Shop")" class="dataLink">All products</a>
+                            @foreach (var category in Model.FeaturedCategories)
+                            {
+                                <a data-href="@Url.Action("FilterProducts", "Shop", new { categoryID = category.CategoryID})" style="display:block;"  class="dataLink @(Model.CategoryID.HasValue && Model.CategoryID.Value == category.CategoryID ? "active" : string.Empty)">@category.CategoryName</a>
+                            }
+
+
+                        </div>
+                    </div><!-- /.widget -->
+
+                    <div class="widget widget-price">
+                        <h5 class="widget-title">Filter by price</h5>
+                        <div class="price-filter">
+                            <div id="slide-range"></div>
+                            <p class="amount">
+                                Price: <input type="text" id="amount" disabled="">
+                            </p>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("Index" ,"Shop")" class="btn btn-danger btn-block">Reset Filter</a>
+                </div><!-- /.sidebar -->
+            </div><!-- /.col-md-3 -->
+            <div class="col-md-9">
+                @*<div class="filter-shop clearfix">
+                        <p class="showing-product float-right">
+                            Showing 1–12 of 56 Products
+                        </p>
+                    </div>*@
+                <div id="productsDiv">
+                    @{
+                        var filterProducts = new ClothShop.ViewModels.FilterProductsViewModel();
+                        filterProducts.Products = Model.Products;
+                        filterProducts.SearchTerm = Model.SearchTerm;
+                        filterProducts.SortBy = Model.SortBy;
+                        filterProducts.CategoryID = Model.CategoryID;
+                        filterProducts.Pager = Model.Pager;
+                        Html.RenderAction("FilterProducts", filterProducts);
+                    }
+                </div>
+            </div><!-- /.col-md-9 -->
+        </div><!-- /.row -->
+    </div><!-- /.container -->
+</section><!-- /.flat-row -->
+
+<script>
+   $("#slide-range").slider({
+        range: true,
+        min: 0,
+        max: @Model.MaximumPrice,
+        values: [0, @Model.MaximumPrice],
+       slide: function (event, ui) {
+           $("#amount").val("$" + ui.values[0] + ".00" + " - " + "$" + ui.values[1] + ".00");
+           clearTimeout(callTimeout);
+           var callTimeout = setTimeout(PriceRangeChange,2000);
+
+        }
+   });
+    $(".dataLink").click(function () {
+        var url = $(this).attr("data-href");
+
+        if (url != "" || url != undefined) {
+            GetData(url);
+        }
+
+        
+    });
+
+    function PriceRangeChange() {
+
+        $.ajax({
+            url: '@Url.Action("FilterProducts", "Shop")',
+            data: {
+                SearchTerm: $("#SearchTerm").val(),
+                sortBy: $("#SortBy").val(),
+                CategoryID: $("#CategoryID").val(),
+                minimumPrice: $("#slide-range").slider("values", 0),
+                maximumPrice: $("#slide-range").slider("values", 1),
+            },
+            success: function (response) {
+                $("#productsDiv").html(response);
+            }
+
+        });
+
+    }
+
+     function GetData(dURL) {
+
+        $.ajax({
+            url: dURL,
+            data: {
+
+                minimumPrice: $("#slide-range").slider("values", 0),
+                maximumPrice: $("#slide-range").slider("values", 1),
+            },
+            success: function (response) {
+                $("#productsDiv").html(response);
+            }
+
+        });
+
+    }
+</script>

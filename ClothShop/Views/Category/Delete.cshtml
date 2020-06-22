@@ -1,0 +1,16 @@
+﻿@model ClothShop.Models.Category
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_AdminLayout .cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are u sure u wanna delte</h3>
+<form method="post">
+    <input type="hidden" name="CategoryID" value="@Model.CategoryID" />
+    <button type="submit">Delete</button>
+
+</form>
+<a href="~/Category/Index">Cancel </a>
+

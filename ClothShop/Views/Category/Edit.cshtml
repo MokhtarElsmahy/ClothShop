@@ -1,0 +1,109 @@
+﻿@model ClothShop.Models.Category
+@{
+    ViewBag.Title = "Edit";
+    Layout = "";
+    var imgurl = !string.IsNullOrEmpty(Model.ImageURL) ? Model.ImageURL : "/Content/images/placeholder.jpg";
+}
+
+<h2>Edit</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <form id="editFrom">
+            @*<input type="hidden" name="ID" value="@Model.CategoryID" />*@
+            <div class="form-group">
+                <input type="hidden" name="CategoryID" value="@Model.CategoryID" />
+                <label>Category Name</label>
+                <input type="text" name="CategoryName" class="form-control" value="@Model.CategoryName" /><br />
+            </div>
+            <div class="form-group">
+                <label>Category Description</label>
+                <input type="text" name="CategoryDescription" class="form-control" value="@Model.CategoryDescription" /><br />
+            </div>
+
+            <div class="form-group">
+                <label>Image</label>
+                <input type="hidden" id="ImageURL" name="ImageURL" value="@Model.ImageURL" />
+                <input class="form-control" id="imageUpload" name="Image" type="file" accept=".png, .jpg" />
+            </div>
+
+            <div class="form-group">
+
+                <label>Is Featured?</label>
+                <div class="input-group">
+                    <div class="radio form-control">
+                        <label><input name="IsFeatured" type="radio" value="True" @(Model.IsFeatured ? "checked" : "") /> True</label>
+                    </div>
+                    <div class="radio form-control">
+                        <label><input name="IsFeatured" type="radio" value="False" @(!Model.IsFeatured ? "checked" : "") /> False</label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <button type="button" id="update">Save</button>
+                <button type="button" id="cancelbtn">cancel</button>
+            </div>
+
+
+        </form>
+    </div>
+    <div class="col-md-4">
+        <img src="@imgurl" class="img-thumbnail img-fluid" id="categoryImage" />
+    </div>
+</div>
+
+
+<script>
+
+    $("#imageUpload").change(function () {
+		var element = this;
+
+		var formData = new FormData();
+
+		var totalFiles = element.files.length;
+
+		for (var i = 0; i < totalFiles; i++) {
+			var file = element.files[i];
+			formData.append("Photo", file);
+		}
+
+		$.ajax({
+			type: 'POST',
+			url: '@Url.Action("UploadImage", "Shared")',
+			dataType: 'json',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+        .done(function (response) {
+
+        	if(response.Success)
+        	{
+        		$("#ImageURL").val(response.ImageURL);
+                $("#categoryImage").attr("src", response.ImageURL);
+        	}
+        })
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+        	alert("FAIL");
+        });
+	});
+
+    $("#update").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "/Category/Edit",
+            data: $("#editFrom").serialize(),
+            success: function (respo) {
+                $("#TableContainer").html(respo);
+                $("#actionContainer").html("");
+                focusAction("TableContainer");
+            }
+        });
+    })
+
+    $("#cancelbtn").click(function () {
+        $("#actionContainer").html("");
+        focusAction("TableContainer");
+    })
+</script>

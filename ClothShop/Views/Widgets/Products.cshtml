@@ -1,0 +1,61 @@
+﻿@model ClothShop.ViewModels.ProductsWidgetViewModel
+@{
+    var defaultimg = "/Content/images/placeholder.jpg";
+}
+@if (Model != null && Model.Products != null)
+{
+    if (!Model.isLatestProducts)
+    {
+    <ul class="flat-filter style-1 text-center max-width-682 clearfix">
+        <li class="active"><a href="#" data-filter="*">All Product</a></li>
+
+        @foreach (var category in Model.Products.Select(p => p.Category).Distinct().ToList())
+        {
+            <li><a href="#" data-filter=".@category.CategoryName">For @category.CategoryName</a></li>
+        }
+
+        @*<li><a href="#" data-filter=".kid">For Kid’s</a></li>
+        <li><a href="#" data-filter=".man">For Man’s</a></li>
+        <li><a href="#" data-filter=".woman">For Woman’s</a></li>
+        <li><a href="#" data-filter=".accessories">Accessories</a></li>*@
+    </ul>
+        <div class="divider h54"></div>
+    }
+
+    <div class="product-content product-fourcolumn clearfix">
+        <ul class="product style2 isotope-product clearfix clearfix">
+
+            @foreach (var product in Model.Products)
+            {
+                var imageURL = string.IsNullOrEmpty(product.ImageURL) ? defaultimg : product.ImageURL;
+                <li class="product-item @product.Category.CategoryName">
+                    <div class="product-thumb clearfix">
+                        <a href="@Url.Action("Details","Product",new { id=product.ProductID})" class="product-thumb">
+                            <img src="@imageURL" style="height:300px" alt="image">
+                        </a>
+                        @if (Model.isLatestProducts)
+                        {
+                            <span class="new">New</span>
+                        }
+
+                    </div>
+                    <div class="product-info text-center clearfix">
+                        <span class="product-title">@product.ProductName</span>
+                        <div class="price">
+                            <ins>
+                                <span class="amount">$ @product.ProductPrice</span>
+                            </ins>
+                        </div>
+
+                    </div>
+                    <div class="add-to-cart text-center">
+                        <a href="#">ADD TO CART</a>
+                    </div>
+                    <a href="#" class="like"><i class="fa fa-heart-o"></i></a>
+                </li>
+            }
+
+
+        </ul>
+    </div>
+}

@@ -1,0 +1,114 @@
+﻿@model ClothShop.ViewModels.FilterProductsViewModel
+<div>
+    <div class="filter-shop clearfix">
+        <p class="showing-product float-right">
+            Showing @(((Model.Pager.CurrentPage - 1) * Model.Pager.PageSize) + 1 ) – @(((Model.Pager.CurrentPage - 1) * Model.Pager.PageSize) + (Model.Products.Count < Model.Pager.PageSize ? Model.Products.Count : Model.Pager.PageSize)) of @Model.Pager.TotalItems Products
+
+        </p>
+    </div><!-- /.filte-shop -->
+</div>
+<div class="product-content product-threecolumn product-slidebar clearfix">
+    <ul class="product style2 sd1">
+
+        @foreach (var product in Model.Products)
+        {
+            <li class="product-item">
+                <div class="product-thumb clearfix">
+                    <a href="#">
+                        <img src="@product.ImageURL" alt="image">
+                    </a>
+
+                </div>
+                <div class="product-info clearfix">
+                    <span class="product-title">@product.ProductName</span>
+                    <div class="price">
+                        <ins>
+                            <span class="amount">$ @product.ProductPrice</span>
+                        </ins>
+                    </div>
+                </div>
+                <div class="add-to-cart text-center">
+                    <a class="productAddToCart" data-id="@product.ProductID">ADD TO CART</a>
+                </div>
+                <a href="#" class="like"><i class="fa fa-heart-o"></i></a>
+            </li>
+        }
+
+    </ul><!-- /.product -->
+</div><!-- /.product-content -->
+
+
+<div class="product-pagination text-center clearfix">
+    @if (Model.Pager != null && Model.Pager.TotalPages > 1)
+    {
+
+        <ul class="flat-pagination">
+            @if (Model.Pager.CurrentPage > 1)
+            {
+
+                <li class="prev">
+                    <a data-href="@Url.Action("FilterProducts","Shop" ,new { pageNo=Model.Pager.CurrentPage - 1 ,sortBy= Model.SortBy , CategoryID=Model.CategoryID ,SearchTerm=Model.SearchTerm})" class="pageDataLink"><i class="fa fa-angle-left"></i></a>
+                </li>
+                @*<li><a href="@Url.Action("index","Shop" ,new { pageNo= 1})">1</a></li>*@
+            }
+            @for (var pageNo = Model.Pager.StartPage; pageNo <= Model.Pager.EndPage; pageNo++)
+            {
+                string activeClass = Model.Pager.CurrentPage == pageNo ? "active bg-info" : string.Empty;
+
+
+                <li class="@activeClass">
+                    <a data-href="@Url.Action("FilterProducts","Shop" ,new { pageNo= pageNo,sortBy= Model.SortBy, CategoryID=Model.CategoryID ,SearchTerm=Model.SearchTerm})" class="pageDataLink">@pageNo</a>
+                </li>
+            }
+            @if (Model.Pager.CurrentPage < Model.Pager.TotalPages)
+            {
+
+                <li><a data-href="@Url.Action("FilterProducts","Shop" ,new { pageNo= Model.Pager.CurrentPage + 1 ,sortBy= Model.SortBy, CategoryID=Model.CategoryID ,SearchTerm=Model.SearchTerm})" class="pageDataLink"><i class="fa fa-angle-right"></i></a></li>
+
+            }
+
+
+        </ul>
+
+
+
+
+
+    }
+</div>
+
+<input type="hidden" id="SearchTerm" value="@Model.SearchTerm" />
+<input type="hidden" id="SortBy" value="@Model.SortBy" />
+<input type="hidden" id="CategoryID" value="@Model.CategoryID" />
+
+
+<script>
+
+
+    $(".pageDataLink").click(function () {
+        var url = $(this).attr("data-href");
+
+        if (url != "" || url != undefined) {
+            GetData(url);
+        }
+    });
+    var products;
+    $(".productAddToCart").click(function () {
+
+        var existingCookieData = $.cookie('CartProducts');
+
+        if (existingCookieData != undefined && existingCookieData != "" && existingCookieData != null) {
+            products = existingCookieData.split('-');
+        }
+        else {
+            products = [];
+        }
+        var productID = $(this).attr('data-id');
+
+        products.push(productID);
+
+        $.cookie('CartProducts', products.join('-'), { path: '/' });
+        updateCartProducts();
+        swal("Done", "Product Added to Cart!", "success");
+    })
+</script>

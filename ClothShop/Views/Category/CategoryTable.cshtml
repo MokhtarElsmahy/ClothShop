@@ -1,0 +1,196 @@
+﻿@*@model List<Category>*@
+@model ClothShop.ViewModels.CategorySearchViewModel
+@*<link href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>*@
+<div>
+
+    <form>
+        <div class="row">
+            <div class="col-md-8">
+
+                <div class="form-group">
+                    <label>Search</label>
+                    <input type="text" class="form-control" id="txt" name="Search"  value="@Model.SearchTerm" />
+                </div>
+            </div>
+            <div class="col-md-4" style="position:relative;top:30px;">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <button id="Searchbtn" type="button" class="form-control">Search</button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="form-control" type="button" id="resetBtn">reset</button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="form-control" type="button" id="newBtn">New</button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </form>
+
+</div>
+<div>
+
+    <table class="table table-striped" id="CategoryTbl" style="height:70%">
+        <thead>
+            <tr>
+
+                <td>category name</td>
+                <td>Products</td>
+                <td>Actions</td>
+            </tr>
+        </thead>
+
+        <tbody>
+
+
+            @foreach (var category in Model.Categories)
+            {
+                <tr>
+
+                    <td>@category.CategoryName</td>
+
+                    @if (category.Products != null)
+                    {
+                        <td>@category.Products.Count</td>
+                    }
+                    else
+                    {
+                        <td>0</td>
+                    }
+                    <td class="row">
+                        <button class="editBtn  col-6 pl-2 btn btn-success" data-id="@category.CategoryID">Edit</button>
+                        <button class="deleteBtn  col-6 pl-2 btn btn-danger" data-id="@category.CategoryID">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+    <div>
+        @if (Model.Pager != null && Model.Pager.TotalPages > 1)
+        {
+
+            if (Model.Pager.CurrentPage > 1)
+            {
+                <button class="pageButtons" data-pageno="1">First</button>
+                <button class="pageButtons" data-pageno="@(Model.Pager.CurrentPage - 1)">Previous</button>
+            }
+
+            for (var pageNo = Model.Pager.StartPage; pageNo <= Model.Pager.EndPage; pageNo++)
+            {
+                string activeClass = Model.Pager.CurrentPage == pageNo ? "active bg-info" : string.Empty;
+
+                <button class="@activeClass pageButtons" data-pageno="@pageNo">@pageNo</button>
+            }
+
+            if (Model.Pager.CurrentPage < Model.Pager.TotalPages)
+            {
+                <button class="pageButtons" data-pageno="@(Model.Pager.CurrentPage + 1)">Next</button>
+                <button class="pageButtons" data-pageno="@Model.Pager.EndPage">Last</button>
+            }
+        }
+    </div>
+
+
+</div>
+
+<script>
+
+    //$("#CategoryTbl").DataTable();
+    $(".pageButtons").click(function () {
+        $.ajax({
+            url: '@Url.Action("CategoryTable", "Category")',
+            data: {
+                pageNo: $(this).attr("data-pageNo"),
+                Search: '@Model.SearchTerm'
+            },
+            success: function (response) {
+                $("#TableContainer").html(response);
+            }
+        });
+       
+	});
+
+    $("#Searchbtn").click(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Category/CategoryTable",
+            data: {
+                Search: $("#txt").val()
+            },
+            success: function (response) {
+                $("#TableContainer").html(response)
+
+            }
+
+
+        });
+    })
+
+    $("#resetBtn").click(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Category/CategoryTable",
+            data: {
+                Search: ""
+            },
+            success: function (response) {
+                $("#TableContainer").html(response)
+
+            }
+
+
+        });
+    })
+
+    $("#newBtn").click(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Category/Create",
+            success: function (response) {
+                $("#actionContainer").html(response);
+                focusAction("actionContainer");
+            }
+        });
+    })
+
+    $(".editBtn").click(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Category/Edit",
+            data: {
+                id: $(this).attr('data-id')
+            },
+            success: function (response) {
+                $("#actionContainer").html(response);
+                focusAction("actionContainer");
+            }
+        });
+    })
+
+    $(".deleteBtn").click(function () {
+        var confirmDelete = confirm("Are u sure?!!!");
+        if (confirmDelete) {
+
+            $.ajax({
+                type: "POST",
+                url: "/Category/Delete",
+                data: {
+                    id: $(this).attr('data-id')
+                },
+                success: function (response) {
+                    $("#TableContainer").html(response);
+                }
+            });
+        }
+    })
+
+</script>
