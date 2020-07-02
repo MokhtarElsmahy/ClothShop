@@ -197,9 +197,10 @@ namespace ClothShop.Controllers
                 model.CartProductIDs = CartProductsCookie.Value.Split('-').Select(id => int.Parse(id)).ToList();
                 model.CartProducts = db.Products.Where(p => model.CartProductIDs.Contains(p.ProductID)).ToList();
                 model.User = UserManager.FindById(User.Identity.GetUserId());
+                return View(model);
 
             }
-            return View(model);
+            return RedirectToAction("Index");
         }
 
         public ActionResult PlaceOrder(string productIDs)

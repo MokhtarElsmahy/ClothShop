@@ -70,13 +70,13 @@
                             </form>
                         </li>
                         @*@if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="box-login">
-                                <a class="icon_login" href="#">
-                                    @User.Identity.Name
-                                </a>
-                            </li>
-                        }*@
+                            {
+                                <li class="box-login">
+                                    <a class="icon_login" href="#">
+                                        @User.Identity.Name
+                                    </a>
+                                </li>
+                            }*@
 
                         <li class="box-cart nav-top-cart-wrapper">
                             <a class="icon_cart nav-cart-trigger active" href="@Url.Action("CheckoutUser", "Shop")"><span id="cartProductsCount">0</span></a>
@@ -139,9 +139,9 @@
                                     </div>
                                 </div>
                             </form>
-                        @{ 
-                            var facebook = db.Configurations.Where(c => c.Key == "FaceBookURL").FirstOrDefault().Value;
-                        }
+                            @{
+                                var facebook = db.Configurations.Where(c => c.Key == "FaceBookURL").FirstOrDefault().Value;
+                            }
                             <ul class="flat-social">
                                 <li><a href="@facebook"><i class="fa fa-facebook"></i></a></li>
                                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
@@ -193,12 +193,12 @@
                             <div class="logo logo-footer">
                                 <a href="index.html"><img src="~/Content/Home/images/logo.png" alt="image" width="107" height="24"></a>
                             </div>
-                        @{ 
-                            var address = db.Configurations.Where(c => c.Key == "FaceBookURL").FirstOrDefault().Value;
-                            var phone = db.Configurations.Where(c => c.Key == "companyPhone").FirstOrDefault().Value;
-                            var gmail = db.Configurations.Where(c => c.Key == "GmailURL").FirstOrDefault().Value;
+                            @{
+                                var address = db.Configurations.Where(c => c.Key == "FaceBookURL").FirstOrDefault().Value;
+                                var phone = db.Configurations.Where(c => c.Key == "companyPhone").FirstOrDefault().Value;
+                                var gmail = db.Configurations.Where(c => c.Key == "GmailURL").FirstOrDefault().Value;
 
-                        }
+                            }
                             <ul class="flat-contact">
                                 <li class="address">@address</li>
                                 <li class="phone">@phone</li>
@@ -264,6 +264,27 @@
     <script src="~/Content/Home/rev-slider/js/extensions/revolution.extension.slideanims.min.js"></script>
     <script src="~/Content/Home/rev-slider/js/extensions/revolution.extension.video.min.js"></script>
 
+    <script>
+
+        $(document).ready(function () {
+            function updateCartProducts() {
+                var cartProducts;
+                var existingCookieData = $.cookie('CartProducts');
+
+                if (existingCookieData != undefined && existingCookieData != "" && existingCookieData != null) {
+                    cartProducts = existingCookieData.split('-');
+                }
+                else {
+                    cartProducts = [];
+                }
+
+                $("#cartProductsCount").html(cartProducts.length);
+            };
+        });
+
+    </script>
+
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    @RenderSection("scripts", required: false)
 </body>
 </html>

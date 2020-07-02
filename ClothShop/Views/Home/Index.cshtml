@@ -7,7 +7,7 @@
     var ThirdCat = Model.FeaturedCategories[2];
     var FourthCat = Model.FeaturedCategories[3];
 }
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
 <!-- SLIDER -->
 <div class="rev_slider_wrapper fullwidthbanner-container">
     <div id="rev-slider1" class="rev_slider fullwidthabanner">
@@ -197,7 +197,7 @@
                             <div class="thumb">
                                 <img src="@firstCat.ImageURL" alt="Image">
                                 <div class="elm-btn">
-                                    <a href="#" class="themesflat-button bg-white width-150">For @firstCat.CategoryName</a>
+                                    <a href="/Shop/Index?CategoryID=@firstCat.CategoryID" class="themesflat-button bg-white width-150">For @firstCat.CategoryName</a>
                                 </div>
                                 <div class="overlay-effect bg-color-1"></div>
                             </div>
@@ -212,7 +212,7 @@
                             <div class="thumb">
                                 <img src="@ThirdCat.ImageURL" alt="Image">
                                 <div class="elm-btn">
-                                    <a href="#" class="themesflat-button bg-white width-150">For @ThirdCat.CategoryName’s</a>
+                                    <a href="/Shop/Index?CategoryID=@ThirdCat.CategoryID" class="themesflat-button bg-white width-150">For @ThirdCat.CategoryName’s</a>
                                 </div>
                                 <div class="overlay-effect bg-color-1"></div>
                             </div>
@@ -224,7 +224,7 @@
                             <div class="thumb">
                                 <img src="@SecondCat.ImageURL" alt="Image">
                                 <div class="elm-btn">
-                                    <a href="#" class="themesflat-button bg-white width-150">@FourthCat.CategoryName</a>
+                                    <a href="/Shop/Index?CategoryID=@FourthCat.CategoryID" class="themesflat-button bg-white width-150">@FourthCat.CategoryName</a>
                                 </div>
                                 <div class="overlay-effect bg-color-1"></div>
                             </div>
@@ -239,7 +239,7 @@
                             <div class="thumb">
                                 <img src="@FourthCat.ImageURL" alt="Image">
                                 <div class="elm-btn">
-                                    <a href="#" class="themesflat-button bg-white width-150">For @SecondCat.CategoryName</a>
+                                    <a href="/Shop/Index?CategoryID=@SecondCat.CategoryID" class="themesflat-button bg-white width-150">For @SecondCat.CategoryName</a>
                                 </div>
                                 <div class="overlay-effect bg-color-1"></div>
                             </div>
@@ -261,7 +261,7 @@
                         New Product
                     </h2>
                 </div>
-               <!--New Product Partial-->
+                <!--New Product Partial-->
                 @{Html.RenderAction("Products", "Widgets", new { isLatestProducts = true });}
             </div>
         </div><!-- /.row -->
@@ -296,208 +296,9 @@
                 <div class="title-section margin-bottom-41">
                     <h2 class="title">Best Sale</h2>
                 </div>
-                
+
                 @{Html.RenderAction("Products", "Widgets", new { isLatestProducts = false });}
-                @*<div class="product-content product-fourcolumn clearfix">
-                    <ul class="product style2 isotope-product clearfix">
-                        <li class="product-item kid woman">
-                            <div class="product-thumb clearfix">
-                                <a href="#">
-                                    <img src="~/Content/Home/images/shop/sh-4/1.jpg" alt="image">
-                                </a>
-                            </div>
-                            <div class="product-info clearfix">
-                                <span class="product-title">Cotton White Underweaer Block Out Edition</span>
-                                <div class="price">
-                                    <ins>
-                                        <span class="amount">$100.00</span>
-                                    </ins>
-                                </div>
-                                <ul class="flat-color-list width-14">
-                                    <li>
-                                        <a href="#" class="red"></a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="blue"></a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="black"></a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="add-to-cart text-center">
-                                <a href="#">ADD TO CART</a>
-                            </div>
-                            <a href="#" class="like"><i class="fa fa-heart-o"></i></a>
-                        </li>
-                        <li class="product-item man accessories">
-                            <div class="product-thumb clearfix">
-                                <a href="#">
-                                    <img src="~/Content/Home/images/shop/sh-4/2.jpg" alt="image">
-                                </a>
-                                <span class="new">New</span>
-                            </div>
-                            <div class="product-info clearfix">
-                                <span class="product-title">Cotton White Underweaer Block Out Edition</span>
-                                <div class="price">
-                                    <ins>
-                                        <span class="amount">$100.00</span>
-                                    </ins>
-                                </div>
-                            </div>
-                            <div class="add-to-cart text-center">
-                                <a href="#">ADD TO CART</a>
-                            </div>
-                            <a href="#" class="like"><i class="fa fa-heart-o"></i></a>
-                        </li>
-                        <li class="product-item kid woman">
-                            <div class="product-thumb clearfix">
-                                <a href="#" class="product-thumb">
-                                    <img src="~/Content/Home/images/shop/sh-4/3.jpg" alt="image">
-                                </a>
-                            </div>
-                            <div class="product-info clearfix">
-                                <span class="product-title">Cotton White Underweaer Block Out Edition</span>
-                                <div class="price">
-                                    <ins>
-                                        <span class="amount">$100.00</span>
-                                    </ins>
-                                </div>
-                            </div>
-                            <div class="add-to-cart text-center">
-                                <a href="#">ADD TO CART</a>
-                            </div>
-                            <a href="#" class="like"><i class="fa fa-heart-o"></i></a>
-                        </li>
-                        <li class="product-item man accessories">
-                            <div class="product-thumb clearfix">
-                                <a href="#" class="product-thumb">
-                                    <img src="~/Content/Home/images/shop/sh-4/4.jpg" alt="image">
-                                </a>
-                                <span class="new sale">Sale</span>
-                            </div>
-                            <div class="product-info clearfix">
-                                <span class="product-title">Cotton White Underweaer Block Out Edition</span>
-                                <div class="price">
-                                    <del>
-                                        <span class="regular">$120.00</span>
-                                    </del>
-                                    <ins>
-                                        <span class="amount">$100.00</span>
-                                    </ins>
-                                </div>
-                                <ul class="flat-color-list width-14">
-                                    <li>
-                                        <a href="#" class="red"></a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="blue"></a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="black"></a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="add-to-cart text-center">
-                                <a href="#">ADD TO CART</a>
-                            </div>
-                            <a href="#" class="like"><i class="fa fa-heart-o"></i></a>
-                        </li>
-                        <li class="product-item kid woman">
-                            <div class="product-thumb clearfix">
-                                <a href="#" class="product-thumb">
-                                    <img src="~/Content/Home/images/shop/sh-4/5.jpg" alt="image">
-                                </a>
-                                <span class="new">New</span>
-                            </div>
-                            <div class="product-info clearfix">
-                                <span class="product-title">Cotton White Underweaer Block Out Edition</span>
-                                <div class="price">
-                                    <ins>
-                                        <span class="amount">$100.00</span>
-                                    </ins>
-                                </div>
-                            </div>
-                            <div class="add-to-cart text-center">
-                                <a href="#">ADD TO CART</a>
-                            </div>
-                            <a href="#" class="like"><i class="fa fa-heart-o"></i></a>
-                        </li>
-                        <li class="product-item man accessories">
-                            <div class="product-thumb clearfix">
-                                <a href="#" class="product-thumb">
-                                    <img src="~/Content/Home/images/shop/sh-4/6.jpg" alt="image">
-                                </a>
-                                <span class="new sale">Sale</span>
-                            </div>
-                            <div class="product-info clearfix">
-                                <span class="product-title">Cotton White Underweaer Block Out Edition</span>
-                                <div class="price">
-                                    <del>
-                                        <span class="regular">$150.00</span>
-                                    </del>
-                                    <ins>
-                                        <span class="amount">$100.00</span>
-                                    </ins>
-                                </div>
-                                <ul class="flat-color-list width-14">
-                                    <li>
-                                        <a href="#" class="red"></a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="blue"></a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="black"></a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="add-to-cart text-center">
-                                <a href="#">ADD TO CART</a>
-                            </div>
-                            <a href="#" class="like"><i class="fa fa-heart-o"></i></a>
-                        </li>
-                        <li class="product-item kid woman">
-                            <div class="product-thumb clearfix">
-                                <a href="#" class="product-thumb">
-                                    <img src="~/Content/Home/images/shop/sh-4/7.jpg" alt="image">
-                                </a>
-                            </div>
-                            <div class="product-info clearfix">
-                                <span class="product-title">Cotton White Underweaer Block Out Edition</span>
-                                <div class="price">
-                                    <ins>
-                                        <span class="amount">$100.00</span>
-                                    </ins>
-                                </div>
-                            </div>
-                            <div class="add-to-cart text-center">
-                                <a href="#">ADD TO CART</a>
-                            </div>
-                            <a href="#" class="like"><i class="fa fa-heart-o"></i></a>
-                        </li>
-                        <li class="product-item man accessories">
-                            <div class="product-thumb clearfix">
-                                <a href="#" class="product-thumb">
-                                    <img src="~/Content/Home/images/shop/sh-4/8.jpg" alt="image">
-                                </a>
-                                <span class="new">New</span>
-                            </div>
-                            <div class="product-info clearfix">
-                                <span class="product-title">Cotton White Underweaer Block Out Edition</span>
-                                <div class="price">
-                                    <ins>
-                                        <span class="amount">$100.00</span>
-                                    </ins>
-                                </div>
-                            </div>
-                            <div class="add-to-cart text-center">
-                                <a href="#">ADD TO CART</a>
-                            </div>
-                            <a href="#" class="like"><i class="fa fa-heart-o"></i></a>
-                        </li>
-                    </ul>
-                </div>*@
+
             </div>
         </div>
     </div>
@@ -733,3 +534,27 @@
     </div>
 </section>
 <!-- END NEW LATEST -->
+@section scripts{
+    <script>
+        debugger
+        var products;
+        $(".productAddToCart").click(function () {
+
+            var existingCookieData = $.cookie('CartProducts');
+
+            if (existingCookieData != undefined && existingCookieData != "" && existingCookieData != null) {
+                products = existingCookieData.split('-');
+            }
+            else {
+                products = [];
+            }
+            var productID = $(this).attr('data-id');
+
+            products.push(productID);
+
+            $.cookie('CartProducts', products.join('-'), { path: '/' });
+            updateCartProducts();
+            swal("Done", "Product Added to Cart!", "success");
+        })
+    </script>
+}

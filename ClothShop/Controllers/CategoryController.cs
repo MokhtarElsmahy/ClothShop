@@ -9,9 +9,12 @@ using System.Web.Mvc;
 
 namespace ClothShop.Controllers
 {
+    [Authorize(Roles ="admin")]
     public class CategoryController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
+
+        [AllowAnonymous]
         // GET: Category
         public ActionResult Index()
         {
@@ -58,6 +61,8 @@ namespace ClothShop.Controllers
 
         }
 
+
+       
         // GET: Category/Details/5
         public ActionResult Details(int id)
         {

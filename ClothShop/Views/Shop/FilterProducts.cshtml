@@ -98,7 +98,7 @@
         var existingCookieData = $.cookie('CartProducts');
 
         if (existingCookieData != undefined && existingCookieData != "" && existingCookieData != null) {
-            products = existingCookieData.split('-');
+            products = existingCookieData.split('-');//1-2-3-3
         }
         else {
             products = [];

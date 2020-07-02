@@ -101,33 +101,6 @@
         </div><!-- /.container -->
     </section>
 
-    <script>
-	$("#placeOrderBtn").click(function () {
-		$.ajax({
-			url: '@Url.Action("PlaceOrder", "Shop")',
-			data: {
-				productIDs: '@string.Join("-", Model.CartProductIDs)'
-			}
-		})
-        .done(function (response) {
-        	if(response.Success)
-        	{
-                $.cookie('CartProducts', '', { path: '/' });
-        		updateCartProducts();
-
-                swal.fire("Done", "Your Order has been placed.", "success").then((value) => {
-        			window.location = '@Url.Action("Index", "Shop")';
-        		});;
-        	}
-        	else{
-                swal.fire("Failed", "Unable to place order.", "warning");
-        	}
-        })
-        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-        	alert("FAIL");
-        });
-	});
-    </script>
 
 }
 else
@@ -136,4 +109,38 @@ else
         <b>No Products in Cart.</b>
     </div>
 }
+
+
+<script>
+        $("#placeOrderBtn").click(function () {
+
+                $.ajax({
+                    url: '@Url.Action("PlaceOrder", "Shop")',
+                    data: {
+                        productIDs: '@string.Join("-", Model.CartProductIDs)'
+                    }
+                })
+                    .done(function (response) {
+                        if (response.Success) {
+                            $.cookie('CartProducts', '', { path: '/' });
+                            updateCartProducts();
+
+                            swal("Done", "Your Order has been placed.", "success").then((value) => {
+                                window.location = '@Url.Action("Index", "Shop")';
+                            });;
+                        }
+                        else {
+                            swal("Failed", "Unable to place order.", "warning");
+                        }
+                    })
+                    .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("FAIL");
+                    });
+
+
+	    });
+
+
+
+</script>
 
